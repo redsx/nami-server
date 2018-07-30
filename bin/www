@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+const http = require('http');
+
+const app = require('../app');
+
+const port = normalizePort(process.env.PORT || '10086');
+
+const server = http.createServer(app.callback());
+const io = require('socket.io')(server,{
+  pingInterval: 15000,
+  origins: function(origin, callback) {
+    console.log('origin: ', origin);
+    callback(null, true);
+  }
+});
+
+require('../socket/index')(io);
+
+server.listen(port, '0.0.0.0');
+server.on('listening', function() {
+  console.log(` >>> server listen on http://127.0.0.1:${port}`);
+});
+
+
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
