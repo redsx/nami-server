@@ -32,7 +32,7 @@ module.exports = {
                     inviteLink: inviteLink,
                 });
                 await user.addGroup(group);
-                await user.addCreator(user);
+                await user.addRoom(group);
                 return StatusMap['0'];
             } else {
                 return StatusMap['1006'];
