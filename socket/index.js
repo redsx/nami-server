@@ -47,7 +47,7 @@ module.exports = function (io) {
         }))
         // 初始化用户房间信息
         socket.on('initGroup', cathFunc(async (info, cb)=> {
-            const ret = await group.initGroup(info);
+            const ret = await group.initGroup(info, socket);
             cb(ret);
         }))
         // 创建群组

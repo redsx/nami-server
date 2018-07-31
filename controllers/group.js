@@ -4,7 +4,7 @@ const User = require('../models/user');
 const StatusMap = require('../constants/status');
 
 module.exports = {
-    async initGroup(info) {
+    async initGroup(info, socket) {
         const { uid } = info;
         const user = await User.findOne({
             where: {_id: uid}
@@ -13,7 +13,9 @@ module.exports = {
             const groups = await user.getGroups({
                 attributes: ['_id'],
             });
-            console.log(groups);
+            groups.map((group) => {
+                socket.join(`group_${group._id}`);
+            })
             return StatusMap['0'];
         }
     },
