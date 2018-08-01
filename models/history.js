@@ -17,11 +17,6 @@ const Hist = sequelize.define('History', {
         allowNull: true,
         comment: '消息类型',
     },
-    timestamp: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        comment: '消息发送时间',
-    },
     // 关联group表
     // room: { 
     //     type: Sequelize.INTEGER, 
@@ -44,7 +39,7 @@ const Hist = sequelize.define('History', {
     // },
 }, {
     timestamps: true,
-    underscored: true,
+    underscored: false,
     paranoid: true,
     freezeTableName: true,
     tableName: 'histories',

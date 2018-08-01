@@ -8,7 +8,7 @@ Group.hasMany(Hist, {foreignKey: 'room', targetKey:'_id'});
 
 Group.belongsToMany(User, {through: 'UserGroup'});
 
-User.hasMany(Hist, {foreignKey: 'owner'});
+User.hasMany(Hist, {as: 'messages', foreignKey: 'owner'});
 User.hasMany(Group, {as: 'rooms', foreignKey: 'creator'})
 
 User.belongsToMany(Group, {through: 'UserGroup'});

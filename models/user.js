@@ -60,18 +60,13 @@ const User = sequelize.define('User', {
         allowNull: true,
         comment: '在线状态',
     },
-    createdAt: {
-        type: Sequelize.DATE,
-        allowNull: true,
-        comment: '群组创建时间',
-    },
     // online: Sequelize.STRING, // 考虑去除，redis维护在线表，用set
     // expressions: Sequelize.STRING, //表情库 取消
     // blocks: Sequelize.STRING, // 屏蔽库 考虑做
     // rooms: Sequelize.STRING, // 房间库
 }, {
     timestamps: true,
-    underscored: true,
+    underscored: false,
     paranoid: true,
     freezeTableName: true,
     tableName: 'users',

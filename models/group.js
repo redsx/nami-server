@@ -34,11 +34,6 @@ const Group = sequelize.define('Group', {
         allowNull: true,
         comment: '群组公告',
     },
-    creatAt: {
-        type: Sequelize.DATE,
-        allowNull: true,
-        comment: '群组创建时间',
-    },
     isPrivate: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
@@ -59,7 +54,7 @@ const Group = sequelize.define('Group', {
     // histories: Sequelize.STRING, // 关联user-history表
 }, {
     timestamps: true,
-    underscored: true,
+    underscored: false,
     paranoid: true,
     freezeTableName: true,
     tableName: 'groups',
