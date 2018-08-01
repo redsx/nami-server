@@ -2,6 +2,7 @@ const user = require('../controllers/user');
 const group = require('../controllers/group');
 const auth = require('../middlewares/auth');
 const StatusMap = require('../constants/status');
+const message =  require('../controllers/message');
 
 function callbackError(cb, err){
     console.log(err);
@@ -55,7 +56,11 @@ module.exports = function (io) {
             const ret = await group.createGroup(info);
             cb(ret);
         }))
-        
+        // groupMessage 接收群组消息
+        socket.on('groupMessage', cathFunc(async (info, cb) => {
+            const ret = await message.saveMessage(info, socket);
+            cb(ret);
+        }))
 
     })
 }

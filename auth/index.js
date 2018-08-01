@@ -13,5 +13,8 @@ module.exports = {
     },
     createGroup: {
         needAuth: true,
+    },
+    groupMessage: {
+        needAuth: true,
     }
 }
