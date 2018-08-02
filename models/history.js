@@ -17,6 +17,12 @@ const Hist = sequelize.define('History', {
         allowNull: true,
         comment: '消息类型',
     },
+    isDel:  {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: true,
+        comment: '是否撤回',
+    },
     // 关联group表
     // room: { 
     //     type: Sequelize.INTEGER, 

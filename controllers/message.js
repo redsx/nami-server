@@ -5,7 +5,7 @@ const StatusMap = require('../constants/status');
 
 module.exports = {
     async saveMessage(info, socket) {
-        const {uid, group, content, type, isPrivate } = info;
+        const {uid, group, content, type } = info;
         const owner = await User.findOne({
             attributes: ['_id', 'avatar', 'nickname'],
             where: { _id: uid }
@@ -25,9 +25,25 @@ module.exports = {
         return {
             status: 0,
             data: {
+                isPrivate: !!groupInfo.isPrivate,
                 _id: message._id,
                 createdAt: message.createdAt,
             }
         };
+    },
+
+    async revokeMessage (info,socket){
+        const { _id } = info;
+        const message = Message.findOne({
+            where: {_id}
+        });
+        if(message){
+            message.isDel = true;
+            await message.save();
+            socket.broadcast.emit('revokeMessage', info);
+            return StatusMap['0'];
+        } else{
+            return StatusMap['1009'];
+        }
     }
 }

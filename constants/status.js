@@ -39,4 +39,8 @@ module.exports = {
         status: 1008,
         message: '群组不存在'
     },
+    '1009': {
+        status: 1009,
+        message: '消息不存在'
+    },
 }

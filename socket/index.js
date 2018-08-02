@@ -57,7 +57,7 @@ module.exports = function (io) {
             cb(ret);
         }))
         // groupMessage 接收群组消息
-        socket.on('groupMessage', cathFunc(async (info, cb) => {
+        socket.on('message', cathFunc(async (info, cb) => {
             const ret = await message.saveMessage(info, socket);
             cb(ret);
         }))
