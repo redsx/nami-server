@@ -18,10 +18,13 @@ module.exports = {
         if(!groupInfo) return StatusMap['1008'];
         // 存储信息，后续确认方案后引入redis
         const message = await Message.create({ type, content });
-        await owner.addMessage(message);
+        await message.setOwner(owner);
         await groupInfo.addHistory(message);
         // 转发信息至房间
-        socket.broadcast.to(`group_${group}`).emit('groupMessage', Object.assign(message, {owner, group}));
+        const {createdAt, _id} = message;
+        socket.broadcast.to(`group_${group}`).emit('groupMessage', {
+            createdAt, _id, owner, group, content, type
+        });
         return {
             status: 0,
             data: {

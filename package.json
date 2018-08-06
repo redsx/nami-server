@@ -4,7 +4,8 @@
   "description": "新的namiserver",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon bin/www"
   },
   "keywords": [
     "nami",

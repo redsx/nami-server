@@ -2,6 +2,7 @@ const config = require('../config/config');
 const Group = require('../models/group');
 const User = require('../models/user');
 const StatusMap = require('../constants/status');
+const Message = require('../models/history');
 
 module.exports = {
     async initGroup(info, socket) {
@@ -10,13 +11,30 @@ module.exports = {
             where: {_id: uid}
         });
         if(user) {
-            const groups = await user.getGroups({
+            let groups = await user.getGroups({
                 attributes: ['_id'],
             });
+            groups = await Group.findAll({
+                attributes: ['_id', 'name', 'avatar', 'bulletin'],
+                where: {_id: {$in: groups.map(item => item._id)}},
+                include: [{
+                    model: Message,
+                    limit: 1,
+                    attributes: ['_id', 'name', 'avatar', 'isPrivate'],
+                    include: [{
+                        model: User,
+                        as: 'owner',
+                        attributes: ['_id', 'nickname', 'avatar'],
+                    }]
+                }]
+            })
             groups.map((group) => {
                 socket.join(`group_${group._id}`);
             })
-            return StatusMap['0'];
+            return {
+                status: 0,
+                data: groups,
+            };
         }
     },
     async createGroup(info) {
