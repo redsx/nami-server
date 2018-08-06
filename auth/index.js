@@ -16,5 +16,8 @@ module.exports = {
     },
     message: {
         needAuth: true,
-    }
+    },
+    getGroupInfo: {
+        needAuth: true,
+    },
 }

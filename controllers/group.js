@@ -5,6 +5,14 @@ const StatusMap = require('../constants/status');
 const Message = require('../models/history');
 
 module.exports = {
+    
+    /**
+     *初始化房间列表
+     *
+     * @param {*} info 
+     * @param {*} socket
+     * @returns {status, groups}
+     */
     async initGroup(info, socket) {
         const { uid } = info;
         const user = await User.findOne({
@@ -15,12 +23,12 @@ module.exports = {
                 attributes: ['_id'],
             });
             groups = await Group.findAll({
-                attributes: ['_id', 'name', 'avatar', 'bulletin'],
+                attributes: ['_id', 'name', 'avatar', 'bulletin', 'isPrivate'],
                 where: {_id: {$in: groups.map(item => item._id)}},
                 include: [{
                     model: Message,
                     limit: 1,
-                    attributes: ['_id', 'name', 'avatar', 'isPrivate'],
+                    attributes: ['_id', 'content', 'type'],
                     include: [{
                         model: User,
                         as: 'owner',
@@ -37,6 +45,13 @@ module.exports = {
             };
         }
     },
+
+    /**
+     *创建群组
+     *
+     * @param {uid, name} info
+     * @returns
+     */
     async createGroup(info) {
         const { uid, name } = info;
         const user = await User.findOne({
@@ -59,6 +74,26 @@ module.exports = {
             }
         } else {
             return StatusMap['1007'];
+        }
+    },
+    async getGroupInfo(info) {
+        const {groupId} = info;
+        const group = await Group.findOne({
+            attributes: ['_id', 'name', 'avatar', 'bulletin', 'isPrivate', 'createdAt'],
+            where: {_id: groupId},
+            include: {
+                model: User,
+                as: 'creator',
+                attributes: ['_id', 'nickname', 'avatar']
+            }
+        });
+        if(group) {
+            return {
+                status: 0,
+                data: group,
+            };
+        } else {
+            return StatusMap['1008'];
         }
     }
 }

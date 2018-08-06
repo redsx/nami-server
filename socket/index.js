@@ -61,6 +61,10 @@ module.exports = function (io) {
             const ret = await message.saveMessage(info, socket);
             cb(ret);
         }))
-
+        // getGroupInfo 获取群组信息
+        socket.on('getGroupInfo', cathFunc(async (info, cb) => {
+            const ret = await group.getGroupInfo(info);
+            cb(ret);
+        }))
     })
 }
