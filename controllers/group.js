@@ -76,17 +76,29 @@ module.exports = {
             return StatusMap['1007'];
         }
     },
+    
+    /**
+     *获取群组信息
+     *
+     * @param {groupId: String, creator: Boolean} info
+     * @returns
+     */
     async getGroupInfo(info) {
-        const {groupId} = info;
-        const group = await Group.findOne({
-            attributes: ['_id', 'name', 'avatar', 'bulletin', 'isPrivate', 'createdAt'],
+        const {groupId, creator} = info;
+        const args = {
+            attributes: ['_id', 'inviteLink', 'name', 'avatar', 'bulletin', 'isPrivate', 'createdAt'],
             where: {_id: groupId},
-            include: {
+        }
+
+        if (creator) {
+            args.include = {
                 model: User,
                 as: 'creator',
                 attributes: ['_id', 'nickname', 'avatar']
             }
-        });
+        }
+
+        const group = await Group.findOne(args);
         if(group) {
             return {
                 status: 0,
@@ -95,5 +107,9 @@ module.exports = {
         } else {
             return StatusMap['1008'];
         }
-    }
+    },
+    
+    async refreshInviteLink(info) {
+        const { groupId, uid } = info;
+    },
 }
