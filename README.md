@@ -49,3 +49,10 @@
 { token }
 // response
 ```
+
+### joinGroup
+```
+// request
+{ token, groupId }
+// response
+```
