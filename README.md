@@ -50,6 +50,13 @@
 // response
 ```
 
+### refreshInviteLink
+```
+// request
+{ token, groupId }
+// response
+```
+
 ### joinGroup
 ```
 // request
