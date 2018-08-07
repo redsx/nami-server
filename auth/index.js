@@ -20,4 +20,10 @@ module.exports = {
     getGroupInfo: {
         needAuth: true,
     },
+    refreshInviteLink: {
+        needAuth: true,
+    },
+    updateGroupInfo: {
+        needAuth: true,
+    },
 }

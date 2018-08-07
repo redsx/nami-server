@@ -43,4 +43,8 @@ module.exports = {
         status: 1009,
         message: '消息不存在'
     },
+    '1010': {
+        status: 1010,
+        message: '权限不足'
+    }
 }

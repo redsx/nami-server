@@ -3,6 +3,7 @@ const Group = require('../models/group');
 const User = require('../models/user');
 const StatusMap = require('../constants/status');
 const Message = require('../models/history');
+const util = require('../utils/util');
 
 module.exports = {
     
@@ -61,7 +62,7 @@ module.exports = {
         if(user) {
             const groups = await user.getRooms();
             if(groups.length < config.MAX_GROUP) {
-                const inviteLink = Date.now().toString(36) + parseInt(Math.random()* 1000000).toString(36)
+                const inviteLink = util.getRandomStr();
                 const group = await Group.create({
                     name: name,
                     inviteLink: inviteLink,
@@ -108,8 +109,63 @@ module.exports = {
             return StatusMap['1008'];
         }
     },
-    
-    async refreshInviteLink(info) {
-        const { groupId, uid } = info;
+
+    /**
+     * 更新群组信息
+     *
+     * @param {*} groupInfo
+     * @param {*} updateInfo
+     * @returns
+     */
+    async _updateGroupInfo (groupInfo, updateInfo) {
+        const { groupId, uid } = groupInfo;
+        const group = await Group.findOne({
+            where: {
+                _id: groupId,
+                creatorId: uid,
+            },
+        });
+        if(group) {
+            Object.assign(group, updateInfo);
+            await group.save();
+            return StatusMap['0'];
+        }
+
+        return StatusMap['1008'];
     },
+
+    /**
+     *
+     * 更新group邀请码
+     * @param {*} info
+     * @returns
+     */
+    async refreshInviteLink(info) {
+        const inviteLink = util.getRandomStr();
+
+        return await this._updateGroupInfo(info, {inviteLink});
+    },
+    
+
+    /**
+     *
+     * 更新房间信息
+     * @param {*} info
+     * @returns
+     */
+    async updateGroupInfo(info) {
+        const { groupId, uid, name, avatar, bulletin } = info;
+        let updateInfo = { name, avatar, bulletin };
+
+        // 去除对象中的空值
+        for(let key in updateInfo) {
+            if(
+                updateInfo[key] == undefined
+                || updateInfo[key] == null
+            ) {
+                delete updateInfo[key];
+            }
+        }
+        return await this._updateGroupInfo({groupId, uid}, updateInfo);
+    }
 }

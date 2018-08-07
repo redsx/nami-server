@@ -66,5 +66,15 @@ module.exports = function (io) {
             const ret = await group.getGroupInfo(info);
             cb(ret);
         }))
+        // refreshInviteLink 更新群组邀请码
+        socket.on('refreshInviteLink', cathFunc(async (info, cb) => {
+            const ret = await group.refreshInviteLink(info);
+            cb(ret);
+        }))
+        // updateGroupInfo 更新群组信息
+        socket.on('updateGroupInfo', cathFunc(async (info, cb) => {
+            const ret = await group.updateGroupInfo(info);
+            cb(ret);
+        }))
     })
 }
