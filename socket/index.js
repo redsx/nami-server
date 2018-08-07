@@ -76,5 +76,10 @@ module.exports = function (io) {
             const ret = await group.updateGroupInfo(info);
             cb(ret);
         }))
+        // joinGroup 加入群组
+        socket.on('joinGroup', cathFunc(async (info, cb) => {
+            const ret = await group.joinGroup(info, socket);
+            cb(ret);
+        }))
     })
 }

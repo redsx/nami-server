@@ -26,4 +26,7 @@ module.exports = {
     updateGroupInfo: {
         needAuth: true,
     },
+    joinGroup: {
+        needAuth: true,
+    },
 }
