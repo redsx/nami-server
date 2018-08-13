@@ -81,5 +81,10 @@ module.exports = function (io) {
             const ret = await group.joinGroup(info, socket);
             cb(ret);
         }))
+        // exitGroup 退出群组
+        socket.on('exitGroup', cathFunc(async (info, cb) => {
+            const ret = await group.exitGroup(info, socket);
+            cb(ret);
+        }))
     })
 }

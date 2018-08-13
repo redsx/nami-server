@@ -169,6 +169,13 @@ module.exports = {
         return await this._updateGroupInfo({groupId, uid}, updateInfo);
     },
 
+    /**
+     * 加入群组
+     *
+     * @param {*} info
+     * @param {*} socket
+     * @returns
+     */
     async joinGroup(info, socket) {
         const {groupId, uid} = info;
 
@@ -182,6 +189,32 @@ module.exports = {
         if(group && user) {
             await user.addGroup(group);
             socket.join(`group_${groupId}`);
+            return StatusMap['0'];
+        } else if(!user) {
+            return StatusMap['1007'];
+        } else {
+            return StatusMap['1008'];
+        }
+    },
+
+    /**
+     * 退出群组
+     *
+     * @param {*} info
+     * @param {*} socket
+     */
+    async exitGroup(info, socket) {
+        const {groupId, uid} = info;
+
+        const group = await Group.findOne({
+            where: { _id: groupId },
+        });
+        const user = await User.findOne({
+            where: {_id: uid}
+        });
+        if(group && user) {
+            await user.removeGroup(group);
+            socket.leave(`group_${groupId}`);
             return StatusMap['0'];
         } else if(!user) {
             return StatusMap['1007'];

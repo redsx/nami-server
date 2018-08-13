@@ -29,4 +29,7 @@ module.exports = {
     joinGroup: {
         needAuth: true,
     },
+    exitGroup: {
+        needAuth: true,
+    }
 }
