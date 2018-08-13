@@ -86,5 +86,10 @@ module.exports = function (io) {
             const ret = await group.exitGroup(info, socket);
             cb(ret);
         }))
+        // loadGroupHistories 获取群组历史消息
+        socket.on('loadGroupHistories', cathFunc(async (info, cb) => {
+            const ret = await group.loadGroupHistories(info);
+            cb(ret);
+        }))
     })
 }

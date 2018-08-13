@@ -31,5 +31,8 @@ module.exports = {
     },
     exitGroup: {
         needAuth: true,
+    },
+    loadGroupHistories: {
+        needAuth: true,
     }
 }

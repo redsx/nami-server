@@ -221,5 +221,36 @@ module.exports = {
         } else {
             return StatusMap['1008'];
         }
+    },
+    /**
+     * 加载历史记录
+     *
+     * @param {*} info
+     * @returns
+     */
+    async loadGroupHistories(info) {
+        let { groupId, limit, timestamp, uid } = info;
+        timestamp = timestamp || Date.now();
+        const group = await Group.findOne({
+            where: {_id: groupId},
+        })
+        const messages = await group.getHistories({
+            order: [['_id', 'DESC']],
+            limit: limit,
+            where: {
+                createdAt: {$lt: timestamp}
+            },
+            attributes: ['_id', 'content', 'type', 'createdAt'],
+            include: [{
+                model: User,
+                as: 'owner',
+                attributes: ['_id', 'nickname', 'avatar'],
+            }]
+        });
+        
+        return {
+            status: 0,
+            data: messages
+        }
     }
 }
