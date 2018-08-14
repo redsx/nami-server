@@ -38,4 +38,10 @@ module.exports = {
     searchGroupUser: {
         needAuth: true,
     },
+    updateUserInfo: {
+        needAuth: true,
+    },
+    updatePassword: {
+        needAuth: true,
+    },
 }

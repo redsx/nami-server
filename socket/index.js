@@ -46,6 +46,16 @@ module.exports = function (io) {
             const ret = await user.initUser(info, socket);
             cb(ret);
         }))
+        // updateUserInfo 修改用户信息
+        socket.on('updateUserInfo', cathFunc(async (info, cb) => {
+            const ret = await user.updateUserInfo(info);
+            cb(ret);
+        }))
+        // updatePassword 修改用户密码
+        socket.on('updatePassword', cathFunc(async (info, cb) => {
+            const ret = await user.updatePassword(info);
+            cb(ret);
+        }))
         // 初始化用户房间信息
         socket.on('initGroup', cathFunc(async (info, cb)=> {
             const ret = await group.initGroup(info, socket);

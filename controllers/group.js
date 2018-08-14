@@ -158,14 +158,8 @@ module.exports = {
         let updateInfo = { name, avatar, bulletin };
 
         // 去除对象中的空值
-        for(let key in updateInfo) {
-            if(
-                updateInfo[key] == undefined
-                || updateInfo[key] == null
-            ) {
-                delete updateInfo[key];
-            }
-        }
+        updateInfo = util.removeEmptyVal(updateInfo);
+        
         return await this._updateGroupInfo({groupId, uid}, updateInfo);
     },
 

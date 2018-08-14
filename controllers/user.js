@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const StatusMap = require('../constants/status');
 const redisCli = require('../dbs/db_redis');
 const Group = require('../models/group');
+const util = require('../utils/util');
 
 function createToken(_id) {
     let exp = Math.floor((new Date().getTime())/1000) + 60 * 60 * 24 * 30;
@@ -106,5 +107,64 @@ module.exports = {
         }
     },
 
+    /**
+     * 更新用户信息
+     *
+     * @param {*} uid
+     * @param {*} info
+     * @returns
+     */
+    async _updateUserInfo (uid, info) {
+        if (info.nickname) {
+            const user = await User.findAll({
+                where: {nickname: info.nickname}
+            });
+            if(user.length > 0) {
+                return StatusMap['1001'];
+            }
+        }
+        const user = await User.findOne({
+            where: {_id: uid}
+        });
+        if(user) {
+            console.log(info);
+            Object.assign(user, info);
+            await user.save();
+
+            return StatusMap['0'];
+        }
+        return StatusMap['1002'];
+        
+    },
+
+    /**
+     * 更新用户信息
+     *
+     * @param {*} info
+     * @returns
+     */
+    async updateUserInfo (info) {
+        const { uid, nickname, avatar, status, blockAll } = info;
+        let updateInfo = { nickname, avatar, status, blockAll };
+
+        updateInfo = util.removeEmptyVal(updateInfo);
+
+        return await this._updateUserInfo(uid, updateInfo);
+    },
+
+    /**
+     * 更新用户密码
+     *
+     * @param {*} info
+     * @returns
+     */
+    async updatePassword(info) {
+        const { oPwd, password, uid } = info;
+        // 不做校验~ 校验了功能就废了，改密码的一般是不记得密码的....
+        const salt = await bluebird.promisify(bcrypt.genSalt)(10);
+        const pwd = await bluebird.promisify(bcrypt.hash)(password, salt, null);
+        console.log('password: ', pwd)
+        return await this._updateUserInfo(uid, {password: pwd});
+    }
 
 }
