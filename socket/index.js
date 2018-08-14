@@ -91,5 +91,10 @@ module.exports = function (io) {
             const ret = await group.loadGroupHistories(info);
             cb(ret);
         }))
+        // searchGroupUser 搜索群组中的用户
+        socket.on('searchGroupUser', cathFunc(async (info, cb) => {
+            const ret = await group.searchGroupUser(info);
+            cb(ret);
+        }))
     })
 }

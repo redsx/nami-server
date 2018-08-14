@@ -34,5 +34,8 @@ module.exports = {
     },
     loadGroupHistories: {
         needAuth: true,
-    }
+    },
+    searchGroupUser: {
+        needAuth: true,
+    },
 }

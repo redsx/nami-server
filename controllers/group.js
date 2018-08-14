@@ -234,23 +234,54 @@ module.exports = {
         const group = await Group.findOne({
             where: {_id: groupId},
         })
-        const messages = await group.getHistories({
-            order: [['_id', 'DESC']],
-            limit: limit,
-            where: {
-                createdAt: {$lt: timestamp}
-            },
-            attributes: ['_id', 'content', 'type', 'createdAt'],
-            include: [{
-                model: User,
-                as: 'owner',
-                attributes: ['_id', 'nickname', 'avatar'],
-            }]
-        });
-        
-        return {
-            status: 0,
-            data: messages
+        if(group) {
+            const messages = await group.getHistories({
+                order: [['_id', 'DESC']],
+                limit: limit,
+                where: {
+                    createdAt: {$lt: timestamp}
+                },
+                attributes: ['_id', 'content', 'type', 'createdAt'],
+                include: [{
+                    model: User,
+                    as: 'owner',
+                    attributes: ['_id', 'nickname', 'avatar'],
+                }]
+            });
+            
+            return {
+                status: 0,
+                data: messages
+            }
         }
+        return StatusMap['1008'];
+    },
+    /**
+     * 查找群组用户
+     *
+     * @param {*} info
+     * @returns
+     */
+    async searchGroupUser(info) {
+        let { groupId, nickname, uid } = info;
+        const group = await Group.findOne({
+            where: {_id: groupId},
+        })
+        if(group) {
+            const users = await group.getUsers({
+                limit: 20,
+                attributes: ['_id', 'nickname', 'avatar'],
+                where: {
+                    nickname: {
+                        $like: `%${(nickname && nickname.trim()) || ''}%`
+                    }
+                },
+            });
+            return {
+                status: 0,
+                data: users,
+            };
+        }
+        return StatusMap['1008'];
     }
 }
