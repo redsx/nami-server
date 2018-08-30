@@ -27,10 +27,15 @@ module.exports = function (io) {
         // middlewares
         socket.use(auth());
 
-        // 前端自动断开连接 wx: 忘记了，查一下
+        // 前端自动断开连接 zz: 忘记了，查一下
         socket.on('frontDisconnect',(info,cb)=>{
             console.log('info: ', info);
         });
+        // 检查用户是否存在
+        socket.on('checkUser', cathFunc(async (info, cb) => {
+            const ret = await user.checkUser(info);
+            cb(ret);
+        }));
         // 登录
         socket.on('login', cathFunc(async (info, cb) => {
             const ret = await user.verifyUser(info);

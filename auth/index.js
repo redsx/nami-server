@@ -1,4 +1,7 @@
 module.exports = {
+    checkUser: {
+        needAuth: false,
+    },
     login: {
         needAuth: false,
     },

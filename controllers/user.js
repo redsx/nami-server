@@ -16,10 +16,21 @@ function createToken(_id) {
 }
 
 module.exports = {
+    async checkUser (info) {
+        const { nickname } = info;
+        const user = await User.findOne({
+            where: { nickname },
+        });
+        if(user) {
+            return StatusMap['1001'];
+        } else {
+            return StatusMap['1002'];
+        }
+    },
     async createUser (info) {
         const { password, nickname, email } = info;
         const user = await User.findOne({
-            where: { $or: [{ nickname }, { email }] }
+            where: { nickname },
         });
         
         if(user) {
