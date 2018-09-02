@@ -28,7 +28,7 @@ module.exports = {
         }
     },
     async createUser (info) {
-        const { password, nickname, email } = info;
+        const { password, nickname } = info;
         const user = await User.findOne({
             where: { nickname },
         });
@@ -43,7 +43,6 @@ module.exports = {
         const newUser = await User.create({
             nickname,
             password: pwd,
-            email: email,
         })
 
         // 初始房间查询

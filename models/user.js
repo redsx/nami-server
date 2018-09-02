@@ -27,7 +27,8 @@ const User = sequelize.define('User', {
     },
     email: {
         type: Sequelize.STRING,
-        allowNull: false,
+        defaultValue: '',
+        allowNull: true,
         comment: '邮箱',
     },
     status: {
