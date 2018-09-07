@@ -17,16 +17,6 @@ app.use(async function(ctx, next) {
 	console.log('ctx.url => ', ctx.url);
 	return next();
 })
-app.use(cors({
-	origin: function(ctx) {
-		if (ctx.url === '/test') {
-			return false;
-		}
-		return '*';
-	},
-	maxAge: 5,
-	credentials: true,
-}));
   
 app.use(bodyparser({
 	enableTypes:['json', 'form', 'text']

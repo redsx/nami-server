@@ -16,4 +16,6 @@ module.exports = {
     QINIU_BUCKET: 'mdzz',
     MAX_GROUP: 5,
     MAX_BLOCK: 30,
+    CLIENT_ID: '2561591cb5a497887f3e',
+    CLIENT_SEC: '837a8bb02e7d0f0083e0a393c46a1537f38d9204',
 }

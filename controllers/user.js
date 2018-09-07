@@ -8,24 +8,55 @@ const StatusMap = require('../constants/status');
 const redisCli = require('../dbs/db_redis');
 const Group = require('../models/group');
 const util = require('../utils/util');
+const logger = require('../utils/log');
 
-function createToken(_id) {
-    let exp = Math.floor((new Date().getTime())/1000) + 60 * 60 * 24 * 30;
-    let token = jwt.sign({user: _id, exp: exp }, JWT_KEY);
-    return token;
-}
 
 module.exports = {
-    async checkUser (info) {
-        const { nickname } = info;
+    createToken(_id) {
+        let exp = Math.floor((new Date().getTime())/1000) + 60 * 60 * 24 * 30;
+        let token = jwt.sign({user: _id, exp: exp }, JWT_KEY);
+        return token;
+    },
+
+    async check (info) {
         const user = await User.findOne({
-            where: { nickname },
+            where: info,
         });
         if(user) {
-            return StatusMap['1001'];
+            return {
+                status: 0,
+                data: user,
+            };
         } else {
             return StatusMap['1002'];
         }
+    },
+    async checkUser (info) {
+        const { nickname } = info;
+        const resp = await this.check({ nickname });
+        if (resp && resp.status === 0) {
+            return StatusMap['1001'];
+        }
+        return StatusMap['1002'];
+    },
+    async findOrCreateGithubUser(userInfo = {}) {
+        const { id, avatar_url: avatar, email, login } = userInfo;
+        const resp = await this.check({ github: id });
+        if (resp.status === 1002) {
+            const user = await User.create({
+                avatar,
+                email,
+                nickname: login,
+                github: id,
+                password: util.getRandomStr(),
+                extra: JSON.stringify({github: userInfo}),
+            });
+            return {
+                status: 0,
+                data: user,
+            };
+        }
+        return resp;
     },
     async createUser (info) {
         const { password, nickname } = info;
@@ -59,7 +90,7 @@ module.exports = {
 
         if(newUser) {
             return {
-                token: createToken(newUser._id),
+                token: this.createToken(newUser._id),
                 status: 0,
             }
         }
@@ -73,11 +104,16 @@ module.exports = {
 
         if(!user) return StatusMap['1002'];
 
-        const resault = await bluebird.promisify(bcrypt.compare)(password,user.password);
+        let resault = false;
+        try {
+            resault = await bluebird.promisify(bcrypt.compare)(password, user.password);
+        } catch(err) {
+            logger.error(`verify user error: {nickname: ${nickname}, password: ${user.password}}`);
+        }
         if(resault) {
             return {
                 status: 0,
-                token: createToken(user._id),
+                token: this.createToken(user._id),
             }
         } else {
             return StatusMap['1003'];

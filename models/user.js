@@ -61,6 +61,15 @@ const User = sequelize.define('User', {
         allowNull: true,
         comment: '在线状态',
     },
+    github: {
+        type: Sequelize.STRING,
+        allowNull: true,
+    },
+    extra: {
+        type: Sequelize.TEXT,
+        defaultValue: '{}',
+        allowNull: true,
+    },
     // online: Sequelize.STRING, // 考虑去除，redis维护在线表，用set
     // expressions: Sequelize.STRING, //表情库 取消
     // blocks: Sequelize.STRING, // 屏蔽库 考虑做
